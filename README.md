@@ -134,17 +134,112 @@ Evaluasi dilakukan menggunakan:
 - Mengidentifikasi keterbatasan penelitian.
 
 
-## Teknologi dan Library
 
-| Teknologi / Library | Kegunaan |
-|---|---|
-| Python | Bahasa pemrograman |
-| Jupyter Notebook | Lingkungan pengembangan |
-| Pandas | Pengolahan data |
-| NumPy | Operasi numerik |
-| Matplotlib | Visualisasi data |
-| Seaborn | Visualisasi statistik |
-| Scikit-learn | Preprocessing, modeling, dan evaluasi |
+## Hasil Data Cleaning dan Preprocessing
+
+Berdasarkan proses Data Cleaning dan Preprocessing, diperoleh perubahan kondisi dataset sebagai berikut:
+
+| Keterangan | Jumlah |
+|---|---:|
+| Data awal (sampel) | 50.000 baris |
+| Data setelah Data Cleaning | 38.941 baris |
+| Kolom awal | 32 kolom |
+| Kolom setelah Data Cleaning | 31 kolom |
+| Kolom setelah Feature Selection | 27 kolom |
+| Fitur prediktor | 26 fitur |
+| Variabel target | 1 fitur |
+| Missing values akhir | 0 |
+| Duplikasi setelah Data Cleaning | 2 baris |
+| Duplikasi setelah Feature Selection | 774 baris |
+
+Proses Data Cleaning dilakukan melalui penghapusan data duplikat, penanganan missing values, pemeriksaan nilai tidak wajar, serta validasi kualitas data. Dari 50.000 baris data sampel, diperoleh 38.941 baris setelah proses Data Cleaning.
+
+Selanjutnya, dilakukan Feature Selection dengan menghapus empat variabel yang berpotensi menyebabkan Data Leakage, yaitu:
+
+- `reservation_status`
+- `reservation_status_date`
+- `booking_changes`
+- `assigned_room_type`
+
+Penghapusan variabel tersebut dilakukan karena penelitian mengasumsikan bahwa prediksi pembatalan dilakukan pada saat reservasi pertama kali dibuat. Dengan demikian, model hanya menggunakan informasi yang relevan dan tersedia pada waktu tersebut.
+
+Setelah proses Feature Selection, dataset memiliki 27 kolom yang terdiri atas 26 fitur prediktor dan 1 variabel target, yaitu `is_canceled`.
+
+Hasil validasi akhir menunjukkan bahwa dataset tidak memiliki missing values. Namun, terdapat 774 baris duplikat setelah Feature Selection. Kondisi ini terjadi karena penghapusan beberapa kolom menyebabkan sejumlah observasi yang sebelumnya berbeda menjadi identik pada fitur yang tersisa.
+
+Dataset hasil preprocessing disimpan dalam file `hotel_bookings_clean.csv` dan digunakan pada tahap pemodelan.
+
+## Hasil Evaluasi Model
+
+Pemodelan dilakukan menggunakan dua algoritma klasifikasi, yaitu **Support Vector Machine (SVM) dengan kernel Linear** dan **Random Forest**.
+
+Dataset dibagi menjadi 80% data training sebanyak 31.152 baris dan 20% data testing sebanyak 7.789 baris. Pembagian dilakukan menggunakan `stratify=y` untuk mempertahankan proporsi kelas target pada kedua kelompok data.
+
+### Perbandingan Performa Model
+
+Hasil pengujian kedua algoritma pada data testing adalah sebagai berikut:
+
+| Metrik | SVM Linear | Random Forest |
+|---|---:|---:|
+| Accuracy | 81,15% | 73,19% |
+| Precision | 72,28% | 99,39% |
+| Recall | 56,34% | 7,20% |
+| F1-Score | 63,32% | 13,43% |
+
+### Perbandingan Akurasi Training dan Testing
+
+Selain evaluasi menggunakan data testing, dilakukan pula perbandingan akurasi pada data training dan testing untuk mengetahui konsistensi performa masing-masing model.
+
+| Model | Akurasi Training | Akurasi Testing |
+|---|---:|---:|
+| SVM Linear | 80,8% | 81,2% |
+| Random Forest | 73,1% | 73,2% |
+
+Hasil tersebut menunjukkan bahwa kedua model memiliki nilai akurasi training dan testing yang relatif berdekatan. Hal ini menunjukkan bahwa performa model cukup konsisten pada kedua kelompok data dan tidak memperlihatkan indikasi overfitting yang mencolok berdasarkan metrik akurasi.
+
+### Analisis Hasil Evaluasi
+
+**1. Support Vector Machine (SVM) Linear**
+
+SVM Linear memperoleh Accuracy sebesar 81,15%, Precision sebesar 72,28%, Recall sebesar 56,34%, dan F1-Score sebesar 63,32% pada kelas reservasi yang dibatalkan.
+
+Hasil tersebut menunjukkan bahwa SVM memiliki kemampuan yang lebih baik dalam mendeteksi reservasi yang benar-benar dibatalkan. Model ini juga menghasilkan keseimbangan Precision dan Recall yang lebih baik dibandingkan Random Forest.
+
+**2. Random Forest**
+
+Random Forest memperoleh Accuracy sebesar 73,19%, Precision sebesar 99,39%, Recall sebesar 7,20%, dan F1-Score sebesar 13,43% pada kelas reservasi yang dibatalkan.
+
+Meskipun memiliki Precision yang tinggi, nilai Recall yang sangat rendah menunjukkan bahwa model hanya mampu mendeteksi sebagian kecil dari keseluruhan reservasi yang benar-benar dibatalkan. Sebagian besar reservasi yang mengalami pembatalan masih salah diklasifikasikan sebagai reservasi yang tidak dibatalkan.
+
+### Analisis Confusion Matrix
+
+Confusion Matrix digunakan untuk mengetahui jumlah prediksi benar dan salah pada masing-masing kelas. Dalam penelitian ini, kelas 0 menunjukkan reservasi tidak dibatalkan, sedangkan kelas 1 menunjukkan reservasi dibatalkan.
+
+Berdasarkan hasil Confusion Matrix, diperoleh perbandingan kemampuan kedua model dalam mendeteksi reservasi yang dibatalkan sebagai berikut:
+
+| Keterangan | SVM Linear | Random Forest |
+|---|---:|---:|
+| True Positive (TP) | 1.267 | 162 |
+| False Negative (FN) | 982 | 2.087 |
+
+SVM Linear berhasil mengidentifikasi 1.267 reservasi yang benar-benar dibatalkan, sedangkan 982 reservasi lainnya masih salah diprediksi sebagai tidak dibatalkan.
+
+Sementara itu, Random Forest hanya berhasil mengidentifikasi 162 reservasi yang benar-benar dibatalkan dan menghasilkan 2.087 False Negative.
+
+Hasil tersebut menunjukkan bahwa SVM memiliki kemampuan yang lebih baik dalam mendeteksi reservasi yang dibatalkan dibandingkan Random Forest.
+
+### Model Terbaik
+
+Berdasarkan keseluruhan hasil evaluasi, **Support Vector Machine (SVM) dengan kernel Linear dipilih sebagai model terbaik**.
+
+SVM Linear memperoleh Accuracy sebesar 81,15%, Precision sebesar 72,28%, Recall sebesar 56,34%, dan F1-Score sebesar 63,32%. Model ini menunjukkan performa yang lebih baik dalam mendeteksi reservasi yang dibatalkan dibandingkan Random Forest.
+
+Meskipun Random Forest memiliki Precision sebesar 99,39%, nilai Recall yang hanya mencapai 7,20% menunjukkan bahwa model tersebut masih kesulitan mengenali sebagian besar reservasi yang benar-benar dibatalkan.
+
+Dengan mempertimbangkan tujuan penelitian untuk mengidentifikasi risiko pembatalan reservasi hotel, kemampuan mendeteksi kelas pembatalan menjadi salah satu aspek utama dalam pemilihan model.
+
+Oleh karena itu, SVM Linear dinilai lebih sesuai untuk digunakan sebagai model klasifikasi dalam penelitian ini dan ditetapkan sebagai model terbaik berdasarkan hasil eksperimen.
+
 
 ## Struktur Repository
 
@@ -267,8 +362,6 @@ Pastikan dataset telah ditempatkan pada direktori yang sesuai agar proses pembac
 ## Penutup
 
 Proyek ini menerapkan tahapan Data Science untuk menganalisis dan memprediksi pembatalan reservasi hotel. Berdasarkan hasil eksperimen, Support Vector Machine (SVM) dengan kernel Linear menunjukkan performa yang lebih baik dibandingkan Random Forest dalam mendeteksi reservasi yang dibatalkan.
-
-Hasil penelitian diharapkan dapat menjadi bahan pertimbangan bagi pihak hotel dalam mengidentifikasi risiko pembatalan reservasi dan mendukung pengambilan keputusan terkait pengelolaan kamar serta strategi overbooking.
 
 ---
 
