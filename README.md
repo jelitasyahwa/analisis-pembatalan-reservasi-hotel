@@ -13,6 +13,14 @@
 
 ---
 
+## Ringkasan Proyek
+
+Proyek ini menganalisis dan memprediksi pembatalan reservasi hotel menggunakan **Hotel Booking Demand Dataset** (sampel 50.000 dari 119.390 baris). Setelah Data Cleaning dan Feature Selection, diperoleh 38.941 baris dengan 26 fitur prediktor.
+
+Dua model klasifikasi dibandingkan, yaitu **SVM Linear** dan **Random Forest**, masing-masing dituning menggunakan GridSearchCV. Pada data testing (7.789 baris), SVM Linear menghasilkan F1-Score kelas pembatalan sebesar 63,30% (Recall 56,34%), sedangkan Random Forest sebesar 21,65% (Recall 12,18%). Berdasarkan hasil tersebut, SVM Linear dipilih sebagai model terbaik. Recall sebesar 56,34% menunjukkan bahwa sebagian reservasi yang dibatalkan belum terdeteksi oleh model.
+
+---
+
 ## Deskripsi Proyek
 
 Proyek ini membahas permasalahan pembatalan reservasi hotel yang dapat memengaruhi ketersediaan kamar dan potensi pendapatan hotel. Pembatalan reservasi, terutama yang terjadi mendekati tanggal kedatangan, berpotensi menyebabkan kamar tidak terjual kembali.
@@ -175,39 +183,48 @@ Pemodelan dilakukan menggunakan dua algoritma klasifikasi, yaitu **Support Vecto
 
 Dataset dibagi menjadi 80% data training sebanyak 31.152 baris dan 20% data testing sebanyak 7.789 baris. Pembagian dilakukan menggunakan `stratify=y` untuk mempertahankan proporsi kelas target pada kedua kelompok data.
 
+### Hyperparameter Tuning
+
+Pemilihan parameter menggunakan GridSearchCV (2-fold) dengan skor F1 pada kelas pembatalan. Data testing tidak digunakan pada tahap ini.
+
+| Model | Parameter yang diuji | Parameter terbaik | F1 Cross-Validation |
+|---|---|---|---:|
+| SVM Linear | C ∈ {0,1; 1} | C = 1 | 0,6138 |
+| Random Forest | n_estimators ∈ {100, 200}, max_depth ∈ {5, 10} | n_estimators = 100, max_depth = 10 | 0,2516 |
+
 ### Perbandingan Performa Model
 
 Hasil pengujian kedua algoritma pada data testing adalah sebagai berikut:
 
 | Metrik | SVM Linear | Random Forest |
 |---|---:|---:|
-| Accuracy | 81,15% | 73,19% |
-| Precision | 72,28% | 99,39% |
-| Recall | 56,34% | 7,20% |
-| F1-Score | 63,32% | 13,43% |
+| Accuracy | 81,14% | 74,54% |
+| Precision | 72,23% | 97,16% |
+| Recall | 56,34% | 12,18% |
+| F1-Score | 63,30% | 21,65% |
 
-### Perbandingan Akurasi Training dan Testing
+### Perbandingan Training dan Testing
 
-Selain evaluasi menggunakan data testing, dilakukan pula perbandingan akurasi pada data training dan testing untuk mengetahui konsistensi performa masing-masing model.
+Selain evaluasi menggunakan data testing, dilakukan pula perbandingan hasil pada data training dan testing untuk mengetahui konsistensi performa masing-masing model.
 
-| Model | Akurasi Training | Akurasi Testing |
-|---|---:|---:|
-| SVM Linear | 80,8% | 81,2% |
-| Random Forest | 73,1% | 73,2% |
+| Model | Akurasi Training | Akurasi Testing | Recall Training | Recall Testing | F1 Training | F1 Testing |
+|---|---:|---:|---:|---:|---:|---:|
+| SVM Linear | 80,82% | 81,14% | 55,36% | 56,34% | 62,51% | 63,30% |
+| Random Forest | 74,70% | 74,54% | 12,61% | 12,18% | 22,35% | 21,65% |
 
-Hasil tersebut menunjukkan bahwa kedua model memiliki nilai akurasi training dan testing yang relatif berdekatan. Hal ini menunjukkan bahwa performa model cukup konsisten pada kedua kelompok data dan tidak memperlihatkan indikasi overfitting yang mencolok berdasarkan metrik akurasi.
+Hasil tersebut menunjukkan bahwa kedua model memiliki nilai yang relatif berdekatan pada data training dan testing, sehingga tidak terlihat indikasi overfitting yang mencolok. Pada Random Forest, Recall dan F1-Score yang rendah terjadi pada kedua kelompok data, sehingga keterbatasan utamanya adalah kemampuan mendeteksi pembatalan, bukan overfitting.
 
 ### Analisis Hasil Evaluasi
 
 **1. Support Vector Machine (SVM) Linear**
 
-SVM Linear memperoleh Accuracy sebesar 81,15%, Precision sebesar 72,28%, Recall sebesar 56,34%, dan F1-Score sebesar 63,32% pada kelas reservasi yang dibatalkan.
+SVM Linear memperoleh Accuracy sebesar 81,14%, Precision sebesar 72,23%, Recall sebesar 56,34%, dan F1-Score sebesar 63,30% pada kelas reservasi yang dibatalkan.
 
 Hasil tersebut menunjukkan bahwa SVM memiliki kemampuan yang lebih baik dalam mendeteksi reservasi yang benar-benar dibatalkan. Model ini juga menghasilkan keseimbangan Precision dan Recall yang lebih baik dibandingkan Random Forest.
 
 **2. Random Forest**
 
-Random Forest memperoleh Accuracy sebesar 73,19%, Precision sebesar 99,39%, Recall sebesar 7,20%, dan F1-Score sebesar 13,43% pada kelas reservasi yang dibatalkan.
+Random Forest memperoleh Accuracy sebesar 74,54%, Precision sebesar 97,16%, Recall sebesar 12,18%, dan F1-Score sebesar 21,65% pada kelas reservasi yang dibatalkan.
 
 Meskipun memiliki Precision yang tinggi, nilai Recall yang sangat rendah menunjukkan bahwa model hanya mampu mendeteksi sebagian kecil dari keseluruhan reservasi yang benar-benar dibatalkan. Sebagian besar reservasi yang mengalami pembatalan masih salah diklasifikasikan sebagai reservasi yang tidak dibatalkan.
 
@@ -219,12 +236,14 @@ Berdasarkan hasil Confusion Matrix, diperoleh perbandingan kemampuan kedua model
 
 | Keterangan | SVM Linear | Random Forest |
 |---|---:|---:|
-| True Positive (TP) | 1.267 | 162 |
-| False Negative (FN) | 982 | 2.087 |
+| True Positive (TP) | 1.267 | 274 |
+| False Negative (FN) | 982 | 1.975 |
+| False Positive (FP) | 487 | 8 |
+| True Negative (TN) | 5.053 | 5.532 |
 
-SVM Linear berhasil mengidentifikasi 1.267 reservasi yang benar-benar dibatalkan, sedangkan 982 reservasi lainnya masih salah diprediksi sebagai tidak dibatalkan.
+SVM Linear berhasil mengidentifikasi 1.267 reservasi yang benar-benar dibatalkan, sedangkan 982 reservasi lainnya masih salah diprediksi sebagai tidak dibatalkan. Di sisi lain, SVM menandai 487 reservasi yang sebenarnya tidak dibatalkan sebagai berisiko dibatalkan.
 
-Sementara itu, Random Forest hanya berhasil mengidentifikasi 162 reservasi yang benar-benar dibatalkan dan menghasilkan 2.087 False Negative.
+Sementara itu, Random Forest hanya berhasil mengidentifikasi 274 reservasi yang benar-benar dibatalkan dan menghasilkan 1.975 False Negative, dengan hanya 8 False Positive.
 
 Hasil tersebut menunjukkan bahwa SVM memiliki kemampuan yang lebih baik dalam mendeteksi reservasi yang dibatalkan dibandingkan Random Forest.
 
@@ -232,9 +251,9 @@ Hasil tersebut menunjukkan bahwa SVM memiliki kemampuan yang lebih baik dalam me
 
 Berdasarkan keseluruhan hasil evaluasi, **Support Vector Machine (SVM) dengan kernel Linear dipilih sebagai model terbaik**.
 
-SVM Linear memperoleh Accuracy sebesar 81,15%, Precision sebesar 72,28%, Recall sebesar 56,34%, dan F1-Score sebesar 63,32%. Model ini menunjukkan performa yang lebih baik dalam mendeteksi reservasi yang dibatalkan dibandingkan Random Forest.
+SVM Linear memperoleh Accuracy sebesar 81,14%, Precision sebesar 72,23%, Recall sebesar 56,34%, dan F1-Score sebesar 63,30%. Model ini menunjukkan performa yang lebih baik dalam mendeteksi reservasi yang dibatalkan dibandingkan Random Forest.
 
-Meskipun Random Forest memiliki Precision sebesar 99,39%, nilai Recall yang hanya mencapai 7,20% menunjukkan bahwa model tersebut masih kesulitan mengenali sebagian besar reservasi yang benar-benar dibatalkan.
+Meskipun Random Forest memiliki Precision sebesar 97,16%, nilai Recall yang hanya mencapai 12,18% menunjukkan bahwa model tersebut masih kesulitan mengenali sebagian besar reservasi yang benar-benar dibatalkan.
 
 Dengan mempertimbangkan tujuan penelitian untuk mengidentifikasi risiko pembatalan reservasi hotel, kemampuan mendeteksi kelas pembatalan menjadi salah satu aspek utama dalam pemilihan model.
 
@@ -244,7 +263,7 @@ Oleh karena itu, SVM Linear dinilai lebih sesuai untuk digunakan sebagai model k
 ## Struktur Repository
 
 ```text
-Proyek-Akhir-DataScience/
+analisis-pembatalan-reservasi-hotel/
 │
 ├── DATA/
 │   └── hotel_bookings.csv
@@ -273,7 +292,7 @@ git clone <URL-REPOSITORY-GITHUB>
 ### 2. Masuk ke Direktori Proyek
 
 ```bash
-cd Proyek-Akhir-DataScience
+cd analisis-pembatalan-reservasi-hotel
 ```
 
 ### 3. Instalasi Library
@@ -284,13 +303,15 @@ Pastikan Python dan Jupyter Notebook telah terinstal, kemudian jalankan:
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 ```
 
+Hasil pada notebook diuji menggunakan pandas 3.0.6, numpy 2.5.4, dan scikit-learn 1.9.1. Versi lain dapat menghasilkan angka yang sedikit berbeda.
+
 ### 4. Menyiapkan Dataset
 
-Unduh dataset melalui Kaggle:
+Dataset sudah tersedia pada `DATA/hotel_bookings.csv`. Jika file tersebut tidak ada, unduh dataset melalui Kaggle:
 
 https://www.kaggle.com/datasets/jessemostipak/hotel-booking-demand
 
-Letakkan file `hotel_bookings.csv` pada direktori:
+lalu letakkan file `hotel_bookings.csv` pada direktori:
 
 ```text
 DATA/hotel_bookings.csv
@@ -306,7 +327,10 @@ jupyter notebook
 
 Buka file `Proyek_Akhir_DataScience.ipynb`, kemudian jalankan seluruh cell secara berurutan dari awal hingga akhir.
 
-Pastikan dataset telah ditempatkan pada direktori yang sesuai agar proses pembacaan data dapat berjalan dengan baik.
+Catatan:
+- Tahap hyperparameter tuning (terutama SVM) membutuhkan waktu beberapa menit.
+- Seluruh proses menggunakan `random_state=42` sehingga hasil tetap sama ketika dijalankan ulang.
+- File `hotel_bookings_clean.csv` dibuat ulang oleh notebook pada tahap penyimpanan dataset hasil preprocessing.
 
 ## Anggota Kelompok
 
