@@ -133,47 +133,6 @@ Evaluasi dilakukan menggunakan:
 - Menjelaskan keputusan pemilihan model.
 - Mengidentifikasi keterbatasan penelitian.
 
-## Hasil Data Cleaning dan Preprocessing
-
-Berdasarkan proses Data Cleaning dan Preprocessing, diperoleh perubahan dataset sebagai berikut:
-
-| Keterangan | Jumlah |
-|---|---:|
-| Data awal (sampel) | 50.000 baris |
-| Setelah penghapusan duplikat | 39.265 baris |
-| Setelah Data Preparation | 38.941 baris |
-| Kolom awal | 32 kolom |
-| Kolom akhir | 27 kolom |
-| Fitur prediktor | 26 fitur |
-| Variabel target | 1 fitur |
-| Missing values akhir | 0 |
-
-Variabel yang berpotensi menyebabkan Data Leakage dihapus agar model tidak menggunakan informasi yang tidak tersedia pada saat reservasi dibuat.
-
-Dataset hasil preprocessing disimpan dalam file `hotel_bookings_clean.csv`.
-
-## Hasil Evaluasi Model
-
-Hasil pengujian kedua algoritma pada data testing adalah sebagai berikut:
-
-| Metrik | SVM Linear | Random Forest |
-|---|---:|---:|
-| Accuracy | 81,15% | 73,19% |
-| Precision | 72,28% | 99,39% |
-| Recall | 56,34% | 7,20% |
-| F1-Score | 63,32% | 13,43% |
-
-### Model Terbaik
-
-Berdasarkan hasil evaluasi, **Support Vector Machine (SVM) dengan kernel Linear dipilih sebagai model terbaik**.
-
-SVM Linear memperoleh Accuracy sebesar 81,15%, Recall sebesar 56,34%, dan F1-Score sebesar 63,32%.
-
-Sementara itu, Random Forest memperoleh Precision sebesar 99,39%, tetapi Recall hanya sebesar 7,20%. Hal ini menunjukkan bahwa Random Forest masih kesulitan mendeteksi sebagian besar reservasi yang benar-benar dibatalkan.
-
-Pada Confusion Matrix, SVM Linear berhasil mengidentifikasi 1.267 reservasi yang benar-benar dibatalkan, sedangkan Random Forest hanya berhasil mengidentifikasi 162 reservasi.
-
-Dengan mempertimbangkan kemampuan mendeteksi pembatalan dan keseimbangan metrik evaluasi, SVM Linear dinilai lebih sesuai dengan tujuan penelitian.
 
 ## Teknologi dan Library
 
@@ -264,6 +223,46 @@ Pastikan dataset telah ditempatkan pada direktori yang sesuai agar proses pembac
 | 2 | Jelita Syahwa Nabila | 123240243 |
 | 3 | Mutiara Rahmawati Zalsa | 123240257 |
 | 4 | Aliffa Izza Ferryna | 123240258 |
+
+
+## Rincian Kontribusi Anggota
+
+### 1. Vania Christabella
+- Mengidentifikasi permasalahan dan tujuan proyek.
+- Memahami karakteristik dan atribut dataset.
+- Berkontribusi dalam proses data preparation dan cleaning.
+- Melakukan analisis eksplorasi dan visualisasi data.
+- Membantu proses feature engineering.
+
+### 2. Jelita Syahwa Nabila
+- Berkontribusi dalam pemeriksaan dan pembersihan data.
+- Melakukan analisis eksplorasi data.
+- Membantu pembangunan dan pengujian model.
+- Berkontribusi dalam evaluasi hasil pemodelan.
+- Mengelola dokumentasi proyek, penyusunan README, dan repository GitHub.
+
+### 3. Mutiara Rahmawati Zalsa
+- Membantu persiapan dan pembersihan dataset.
+- Melakukan analisis distribusi dan hubungan antarvariabel.
+- Membuat visualisasi data.
+- Melakukan feature engineering.
+- Berkontribusi dalam pembangunan dan pengujian model.
+
+### 4. Aliffa Izza Ferryna
+- Membantu persiapan dan pengolahan dataset.
+- Berkontribusi dalam feature engineering.
+- Membangun dan mengembangkan model Machine Learning.
+- Melakukan evaluasi dan perbandingan performa model.
+- Membantu interpretasi hasil pemodelan.
+
+## Tanggung Jawab Bersama
+
+1. Seluruh anggota terlibat dalam setiap tahapan pengembangan proyek.
+2. Seluruh anggota berkontribusi dalam proses pengolahan dan pemeriksaan data.
+3. Setiap anggota memahami proses dan hasil dari seluruh tahapan proyek.
+4. Seluruh anggota ikut melakukan pemeriksaan dan revisi notebook serta laporan.
+5. Seluruh anggota berkontribusi dalam pengembangan proyek sesuai tanggung jawab masing-masing.
+
 
 ## Penutup
 
