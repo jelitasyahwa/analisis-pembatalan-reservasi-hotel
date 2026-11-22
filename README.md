@@ -2,7 +2,7 @@
 # Proyek Akhir Data Science
 ## Analisis dan Prediksi Pembatalan Reservasi Hotel: Pendekatan Data Science untuk Mengidentifikasi Faktor Risiko dan Mendukung Strategi Overbooking
 
-### Kelompok Aliansi Cinta dan Jagung Bakar NO 23
+### Kelompok 23 Aliansi Cinta dan Jagung Bakar
 
 | No. | Nama | NIM |
 |---|---|---|
@@ -354,10 +354,8 @@ Pastikan dataset telah ditempatkan pada direktori yang sesuai agar proses pembac
 
 1. Seluruh anggota terlibat dalam setiap tahapan pengembangan proyek.
 2. Seluruh anggota berkontribusi dalam proses pengolahan dan pemeriksaan data.
-3. Setiap anggota memahami proses dan hasil dari seluruh tahapan proyek.
-4. Seluruh anggota ikut melakukan pemeriksaan dan revisi notebook serta laporan.
-5. Seluruh anggota berkontribusi dalam pengembangan proyek sesuai tanggung jawab masing-masing.
-
+3. Seluruh anggota ikut melakukan pemeriksaan dan revisi notebook. 
+4. Seluruh anggota berkontribusi dalam pengembangan proyek sesuai tanggung jawab masing-masing.
 
 ## Penutup
 
