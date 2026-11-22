@@ -388,6 +388,6 @@ Proyek ini menerapkan tahapan Data Science untuk menganalisis dan memprediksi pe
 ---
 
 **Program Studi Informatika**  
-**Fakultas Teknik dan Sains**  
+**Fakultas Teknik Industri**  
 **Universitas Pembangunan Nasional "Veteran" Yogyakarta**  
 **Praktikum Data Science 2026/2027**
